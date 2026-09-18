@@ -1,5 +1,6 @@
 const CACHE_NAME = 'hatchery-cache-v1';
 const URLS_TO_CACHE = [
+  './index.html',
   './app.html',
   './manifest.json',
   './icon-192.png',
