@@ -4,12 +4,52 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <meta name="theme-color" content="#1C2321">
+<style>
+  /* Hide everything until auth check completes — prevents dashboard flashing before redirect */
+  body{ visibility:hidden; }
+  body.auth-ready{ visibility:visible; }
+</style>
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="الفقاسة">
 <title>نظام إدارة الفقاسة</title>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+  import {
+    getFirestore, doc, getDoc, setDoc, onSnapshot
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3CJbQG70wGK2UdBImPYUOgeMMGFst0cg",
+    authDomain: "naif-hatchery.firebaseapp.com",
+    projectId: "naif-hatchery",
+    storageBucket: "naif-hatchery.firebasestorage.app",
+    messagingSenderId: "357172497976",
+    appId: "1:357172497976:web:ec15d713477e980a10a0cd"
+  };
+
+  const fbApp = initializeApp(firebaseConfig);
+  const auth = getAuth(fbApp);
+  const dbFS = getFirestore(fbApp);
+  const DOC_REF = doc(dbFS, 'hatchery', 'main');
+
+  // Expose to the classic (non-module) script below
+  window.__fb = { auth, dbFS, DOC_REF, getDoc, setDoc, onSnapshot, signOut };
+
+  // Auth guard: bounce to login if not signed in
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.replace('./index.html');
+    } else {
+      document.body.classList.add('auth-ready');
+      window.__fbUserReady = true;
+      window.dispatchEvent(new Event('fb-user-ready'));
+    }
+  });
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -287,7 +327,10 @@
           <div class="sub" id="pageSub">نظرة عامة على كل محطات الفقاسة</div>
         </div>
       </div>
-      <div class="clock" id="clockBox"></div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div class="clock" id="clockBox"></div>
+        <button id="logoutBtn" class="btn ghost sm" style="white-space:nowrap;">خروج</button>
+      </div>
     </div>
     <div class="content" id="content"></div>
   </div>
@@ -622,7 +665,7 @@ function saveStation(id){
   if(!vals.name){ toast(LANG==='ar'?'اسم المحطة مطلوب':'Station name is required'); return; }
   if(id){ Object.assign(DB.stations.find(x=>x.id===id), vals); }
   else { DB.stations.push({id:++idCounter, ...vals}); }
-  closeModal(); toast(t('toastSaved')); setView('stations');
+  closeModal(); toast(t('toastSaved')); syncToCloud(); setView('stations');
 }
 
 function renderMedicines(c){
@@ -705,7 +748,7 @@ function saveMed(id){
   if(!vals.name){ toast(LANG==='ar'?'اسم الدواء مطلوب':'Medicine name is required'); return; }
   if(id){ Object.assign(DB.medicines.find(x=>x.id===id), vals); }
   else { DB.medicines.push({id:++idCounter, ...vals}); }
-  closeModal(); toast(t('toastSaved')); setView('medicines');
+  closeModal(); toast(t('toastSaved')); syncToCloud(); setView('medicines');
 }
 
 function renderNitrogen(c){
@@ -764,7 +807,7 @@ function saveNitrogen(){
   DB.nitrogen.fill = +document.getElementById('f_fill').value || 0;
   DB.nitrogen.dailyUsage = +document.getElementById('f_daily').value || 0.1;
   DB.nitrogen.lastFillDate = new Date().toISOString().slice(0,10);
-  closeModal(); toast(t('toastSaved')); setView('nitrogen');
+  closeModal(); toast(t('toastSaved')); syncToCloud(); setView('nitrogen');
 }
 
 function renderWorkers(c){
@@ -835,7 +878,7 @@ function saveWorker(id){
   if(!vals.name){ toast(LANG==='ar'?'اسم العامل مطلوب':'Worker name is required'); return; }
   if(id){ Object.assign(DB.workers.find(x=>x.id===id), vals); }
   else { DB.workers.push({id:++idCounter, ...vals}); }
-  closeModal(); toast(t('toastSaved')); setView('workers');
+  closeModal(); toast(t('toastSaved')); syncToCloud(); setView('workers');
 }
 
 function renderInventory(c, searchQ=''){
@@ -920,7 +963,7 @@ function saveItem(id){
   if(!vals.name){ toast(LANG==='ar'?'اسم الصنف مطلوب':'Item name is required'); return; }
   if(id){ Object.assign(DB.inventory.find(x=>x.id===id), vals); }
   else { DB.inventory.push({id:++idCounter, ...vals, log:[]}); }
-  closeModal(); toast(t('toastSaved')); setView('inventory');
+  closeModal(); toast(t('toastSaved')); syncToCloud(); setView('inventory');
 }
 function openIssueForm(id){
   const i = DB.inventory.find(x=>x.id===id);
@@ -940,13 +983,60 @@ function saveIssue(id){
   if(amt<=0 || amt>i.qty){ toast(LANG==='ar'?'كمية غير صحيحة':'Invalid quantity'); return; }
   i.qty -= amt;
   i.log.push({date:new Date().toISOString().slice(0,10), amt});
-  closeModal(); toast(t('toastSaved')); setView('inventory');
+  closeModal(); toast(t('toastSaved')); syncToCloud(); setView('inventory');
 }
 
 function deleteRow(coll, id){
   DB[coll] = DB[coll].filter(x=>x.id!==id);
   toast(t('toastDeleted'));
+  syncToCloud();
   setView(window.__view);
+}
+
+/* ---------------- Firestore cloud sync ---------------- */
+let suppressNextSnapshot = false;
+async function syncToCloud(){
+  try{
+    suppressNextSnapshot = true;
+    await window.__fb.setDoc(window.__fb.DOC_REF, { data: JSON.stringify(DB), idCounter, updatedAt: Date.now() });
+  }catch(err){
+    console.error('Cloud sync failed', err);
+    toast(LANG==='ar' ? 'تعذّر الحفظ في السحابة، تحقق من الاتصال' : 'Cloud save failed, check connection');
+  }
+}
+
+function startCloudSync(){
+  // Live-listen: any change from any device updates DB and re-renders
+  window.__fb.onSnapshot(window.__fb.DOC_REF, (snap)=>{
+    if(suppressNextSnapshot){ suppressNextSnapshot = false; return; }
+    if(snap.exists()){
+      const data = snap.data();
+      try{
+        DB = JSON.parse(data.data);
+        idCounter = data.idCounter || idCounter;
+        setView(window.__view || 'dashboard');
+      }catch(e){ console.error('Bad cloud data', e); }
+    }
+  }, (err)=>{
+    console.error('Snapshot error', err);
+  });
+}
+
+async function loadInitialData(){
+  try{
+    const snap = await window.__fb.getDoc(window.__fb.DOC_REF);
+    if(snap.exists()){
+      const data = snap.data();
+      DB = JSON.parse(data.data);
+      idCounter = data.idCounter || idCounter;
+    } else {
+      // First run ever: seed the cloud with the current demo DB
+      await syncToCloud();
+    }
+  }catch(err){
+    console.error('Initial load failed', err);
+    toast(LANG==='ar' ? 'تعذّر تحميل البيانات، سيتم استخدام بيانات محلية مؤقتة' : 'Failed to load data — using temporary local data');
+  }
 }
 
 function setLang(lang){
@@ -972,11 +1062,23 @@ function tickClock(){
 }
 setInterval(tickClock, 1000*30);
 
-setLang('ar');
-setView('dashboard');
-tickClock();
-toast(t('demoNotice'));
 window.addEventListener('resize', ()=>{ if(window.__view==='dashboard') drawHatchChart(); });
+
+document.getElementById('logoutBtn').addEventListener('click', async ()=>{
+  try{ await window.__fb.signOut(window.__fb.auth); }
+  catch(e){ console.error(e); }
+});
+
+async function boot(){
+  LANG = 'ar';
+  document.documentElement.lang = 'ar'; document.documentElement.dir = 'rtl';
+  await loadInitialData();
+  setLang('ar');
+  startCloudSync();
+  tickClock();
+}
+if(window.__fbUserReady){ boot(); }
+else { window.addEventListener('fb-user-ready', boot, {once:true}); }
 
 if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>{
