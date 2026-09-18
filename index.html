@@ -6,983 +6,156 @@
 <meta name="theme-color" content="#1C2321">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="الفقاسة">
-<title>نظام إدارة الفقاسة</title>
+<title>تسجيل الدخول - نظام الفقاسة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#1C2321;
-    --ink-soft:#2A322F;
-    --paper:#F2EDE4;
-    --paper-dim:#E7E0D3;
-    --amber:#C98A3B;
-    --amber-soft:#E4B476;
-    --teal:#3E6259;
-    --teal-soft:#5A857A;
-    --green:#5C7A4E;
-    --red:#B33A3A;
-    --red-soft:#E7C6C1;
-    --line:#3A423F;
-    --line-light:#D9D0BE;
-    --radius:10px;
-    --font-ar:'Cairo',sans-serif;
-    --font-num:'Space Grotesk',sans-serif;
+    --ink:#1C2321; --ink-soft:#2A322F; --paper:#F2EDE4; --paper-dim:#E7E0D3;
+    --amber:#C98A3B; --amber-soft:#E4B476; --teal:#3E6259; --red:#B33A3A; --red-soft:#E7C6C1;
+    --line:#3A423F; --line-light:#D9D0BE;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;}
   body{
-    font-family:var(--font-ar);
-    background:var(--ink);
+    font-family:'Cairo',sans-serif;
+    background:radial-gradient(circle at 30% 20%, #2A332F 0%, #1C2321 60%);
     color:var(--paper);
     min-height:100vh;
-    overflow-x:hidden;
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;
   }
-  body.lang-en{font-family:'Space Grotesk',sans-serif;}
-  ::selection{background:var(--amber);color:var(--ink);}
-
-  .shell{display:flex;min-height:100vh;}
-  .sidebar{
-    width:230px;flex-shrink:0;background:var(--ink-soft);
-    border-inline-end:1px solid var(--line);
-    display:flex;flex-direction:column;
-    padding:22px 14px;
-    position:sticky;top:0;height:100vh;
-    transition:transform .25s ease;
-    z-index:40;
+  .login-card{
+    background:var(--paper); color:var(--ink);
+    width:100%;max-width:380px;
+    border-radius:14px;padding:34px 30px;
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
   }
-  .brand{
-    display:flex;align-items:center;gap:10px;
-    padding:0 8px 22px 8px;border-bottom:1px solid var(--line);margin-bottom:18px;
-  }
+  .brand{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:26px;}
   .brand-mark{
-    width:34px;height:34px;border-radius:8px;
+    width:52px;height:52px;border-radius:12px;
     background:linear-gradient(155deg,var(--amber),var(--amber-soft));
     display:flex;align-items:center;justify-content:center;
-    font-family:var(--font-num);font-weight:700;color:var(--ink);font-size:15px;
-    flex-shrink:0;
+    font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--ink);font-size:20px;
   }
-  .brand-text{line-height:1.25;}
-  .brand-text .t1{font-size:14.5px;font-weight:700;color:var(--paper);}
-  .brand-text .t2{font-size:11px;color:var(--teal-soft);font-family:var(--font-num);letter-spacing:.03em;}
+  .brand h1{font-size:17px;font-weight:700;}
+  .brand p{font-size:12px;color:#8A9089;margin-top:2px;}
 
-  .nav{display:flex;flex-direction:column;gap:3px;flex:1;}
-  .nav-item{
-    display:flex;align-items:center;gap:11px;
-    padding:10px 12px;border-radius:8px;
-    color:#B9BFB9;font-size:14px;font-weight:500;
-    cursor:pointer;border:none;background:none;width:100%;text-align:inherit;
-    font-family:inherit;
-    transition:background .15s ease,color .15s ease;
+  .field{margin-bottom:15px;}
+  .field label{display:block;font-size:12.5px;font-weight:600;color:#5E655E;margin-bottom:6px;}
+  .field input{
+    width:100%;padding:11px 13px;border:1px solid var(--line-light);border-radius:8px;
+    font-family:inherit;font-size:14px;background:#fff;color:var(--ink);outline:none;
+    transition:border-color .15s;
   }
-  .nav-item .ic{width:18px;height:18px;flex-shrink:0;opacity:.85;}
-  .nav-item:hover{background:rgba(201,138,59,.09);color:var(--paper);}
-  .nav-item.active{background:rgba(201,138,59,.16);color:var(--amber-soft);}
-  .nav-item.active .ic{opacity:1;}
-  .nav-badge{
-    margin-inline-start:auto;background:var(--red);color:#fff;
-    font-family:var(--font-num);font-size:10.5px;font-weight:700;
-    padding:1px 6px;border-radius:20px;min-width:18px;text-align:center;
-  }
+  .field input:focus{border-color:var(--amber);}
 
-  .sidebar-foot{border-top:1px solid var(--line);padding-top:14px;margin-top:10px;}
-  .lang-toggle{
-    display:flex;background:var(--ink);border-radius:8px;padding:3px;gap:3px;
+  .btn-login{
+    width:100%;background:var(--amber);color:var(--ink);border:none;
+    padding:12px;border-radius:8px;font-weight:700;font-size:14.5px;
+    cursor:pointer;font-family:inherit;margin-top:6px;transition:filter .15s;
   }
-  .lang-toggle button{
-    flex:1;background:none;border:none;color:#8A8F8A;font-size:12.5px;font-weight:600;
-    padding:7px 0;border-radius:6px;cursor:pointer;font-family:inherit;
-    transition:background .15s, color .15s;
+  .btn-login:hover{filter:brightness(1.08);}
+  .btn-login:disabled{opacity:.6;cursor:not-allowed;}
+
+  .error-box{
+    background:var(--red-soft);color:#7A2424;font-size:12.5px;font-weight:600;
+    padding:10px 12px;border-radius:8px;margin-bottom:14px;display:none;
   }
-  .lang-toggle button.active{background:var(--amber);color:var(--ink);}
+  .error-box.show{display:block;}
 
-  .main{flex:1;min-width:0;display:flex;flex-direction:column;}
-  .topbar{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:18px 28px;border-bottom:1px solid var(--line);
-    background:rgba(28,35,33,.9);backdrop-filter:blur(6px);
-    position:sticky;top:0;z-index:30;
+  .foot-note{text-align:center;font-size:11.5px;color:#9AA097;margin-top:18px;}
+  .spinner{
+    display:inline-block;width:14px;height:14px;border:2px solid rgba(28,35,33,.3);
+    border-top-color:var(--ink);border-radius:50%;animation:spin .7s linear infinite;
+    vertical-align:middle;margin-inline-end:6px;
   }
-  .topbar h1{font-size:19px;font-weight:700;}
-  .topbar .sub{font-size:12.5px;color:#8A9089;margin-top:2px;}
-  .menu-btn{display:none;background:none;border:none;color:var(--paper);cursor:pointer;padding:6px;}
-  .clock{font-family:var(--font-num);font-size:12.5px;color:var(--teal-soft);text-align:end;}
-
-  .content{padding:26px 28px 60px;flex:1;}
-  .view{display:none;animation:fadein .25s ease;}
-  .view.active{display:block;}
-  @keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
-
-  .card{
-    background:var(--paper);color:var(--ink);
-    border-radius:var(--radius);padding:18px;
-  }
-  .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
-  .section-head h2{font-size:16.5px;font-weight:700;}
-  .section-head .desc{font-size:12.5px;color:#8A9089;margin-top:2px;}
-
-  .btn{
-    display:inline-flex;align-items:center;gap:7px;
-    background:var(--amber);color:var(--ink);border:none;
-    padding:9px 16px;border-radius:8px;font-weight:700;font-size:13px;
-    cursor:pointer;font-family:inherit;transition:filter .15s;
-  }
-  .btn:hover{filter:brightness(1.08);}
-  .btn.ghost{background:transparent;border:1px solid var(--line-light);color:var(--paper);}
-  .btn.ghost:hover{background:rgba(255,255,255,.06);}
-  .btn.sm{padding:6px 11px;font-size:12px;}
-  .btn.danger{background:var(--red);color:#fff;}
-
-  .status-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
-  .stat{
-    background:var(--ink-soft);border:1px solid var(--line);border-radius:var(--radius);
-    padding:16px 18px;position:relative;overflow:hidden;
-  }
-  .stat .num{font-family:var(--font-num);font-size:28px;font-weight:700;line-height:1;}
-  .stat .lbl{font-size:12.5px;color:#9AA097;margin-top:8px;}
-  .stat .bar{position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;}
-  .stat.amber .bar{background:var(--amber);} .stat.amber .num{color:var(--amber-soft);}
-  .stat.teal .bar{background:var(--teal);} .stat.teal .num{color:var(--teal-soft);}
-  .stat.green .bar{background:var(--green);} .stat.green .num{color:#8FB37D;}
-  .stat.red .bar{background:var(--red);} .stat.red .num{color:#E08F8F;}
-
-  .dash-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;}
-  .panel-title{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
-
-  .alert-row{
-    display:flex;align-items:center;gap:10px;padding:10px 0;
-    border-bottom:1px solid var(--paper-dim);font-size:13px;
-  }
-  .alert-row:last-child{border-bottom:none;}
-  .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-  .dot.red{background:var(--red);} .dot.amber{background:var(--amber);}
-  .alert-row .txt strong{display:block;font-weight:700;}
-  .alert-row .txt span{font-size:11.5px;color:#8A9089;}
-
-  canvas{max-width:100%;}
-  .chart-wrap{height:190px;position:relative;}
-
-  .station-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px;}
-  .station-mini{background:var(--ink-soft);border:1px solid var(--line);border-radius:8px;padding:12px 14px;}
-  .station-mini .nm{font-size:12.5px;font-weight:700;color:var(--paper);}
-  .station-mini .rate{font-family:var(--font-num);font-size:20px;font-weight:700;color:var(--amber-soft);margin-top:4px;}
-  .station-mini .rate span{font-size:11px;color:#8A9089;font-weight:500;font-family:var(--font-ar);}
-  .meter{height:5px;background:var(--line);border-radius:4px;margin-top:8px;overflow:hidden;}
-  .meter i{display:block;height:100%;background:var(--green);border-radius:4px;}
-
-  table{width:100%;border-collapse:collapse;font-size:13px;}
-  thead th{
-    text-align:start;font-weight:600;color:#7C837C;font-size:11.5px;
-    padding:0 10px 10px;border-bottom:1px solid var(--paper-dim);
-    background:var(--paper);position:sticky;top:0;
-  }
-  tbody td{padding:11px 10px;border-bottom:1px solid var(--paper-dim);color:var(--ink);}
-  tbody tr:last-child td{border-bottom:none;}
-  tbody tr:hover{background:var(--paper-dim);}
-  .table-wrap{overflow-x:auto;border-radius:var(--radius);}
-  .num-cell{font-family:var(--font-num);font-weight:600;}
-  .pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
-  .pill.ok{background:#DCE6D3;color:#3F5A33;}
-  .pill.warn{background:#F3E1C4;color:#8A5B1E;}
-  .pill.bad{background:var(--red-soft);color:#7A2424;}
-  .row-actions{display:flex;gap:6px;}
-  .icon-btn{background:none;border:none;cursor:pointer;color:#8A9089;padding:4px;border-radius:5px;}
-  .icon-btn:hover{background:var(--paper-dim);color:var(--ink);}
-
-  .search-bar{
-    display:flex;align-items:center;gap:8px;background:var(--paper-dim);
-    border-radius:8px;padding:8px 12px;margin-bottom:14px;max-width:340px;
-  }
-  .search-bar input{
-    border:none;background:none;outline:none;font-family:inherit;font-size:13px;
-    color:var(--ink);width:100%;
-  }
-  .search-bar svg{flex-shrink:0;opacity:.5;}
-
-  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
-
-  .empty{text-align:center;padding:50px 20px;color:#8A9089;}
-  .empty .t{font-weight:700;color:var(--ink);font-size:14px;margin-bottom:4px;}
-  .empty .s{font-size:12.5px;}
-
-  .modal-overlay{
-    position:fixed;inset:0;background:rgba(10,13,12,.72);
-    display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
-  }
-  .modal-overlay.open{display:flex;}
-  .modal{
-    background:var(--paper);color:var(--ink);border-radius:12px;
-    width:100%;max-width:460px;max-height:88vh;overflow-y:auto;
-    padding:22px;
-  }
-  .modal h3{font-size:16px;font-weight:700;margin-bottom:16px;}
-  .field{margin-bottom:13px;}
-  .field label{display:block;font-size:12px;font-weight:600;color:#5E655E;margin-bottom:5px;}
-  .field input,.field select{
-    width:100%;padding:9px 11px;border:1px solid var(--line-light);border-radius:7px;
-    font-family:inherit;font-size:13.5px;background:#fff;color:var(--ink);outline:none;
-  }
-  .field input:focus,.field select:focus{border-color:var(--amber);}
-  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
-
-  .toast-wrap{position:fixed;bottom:20px;inset-inline-end:20px;z-index:200;display:flex;flex-direction:column;gap:8px;}
-  .toast{
-    background:var(--ink-soft);border:1px solid var(--line);color:var(--paper);
-    padding:11px 16px;border-radius:8px;font-size:13px;font-weight:600;
-    display:flex;align-items:center;gap:8px;animation:slidein .2s ease;
-    box-shadow:0 6px 20px rgba(0,0,0,.3);
-  }
-  @keyframes slidein{from{transform:translateY(10px);opacity:0;}to{transform:none;opacity:1;}}
-
-  @media (max-width:980px){
-    .status-strip{grid-template-columns:repeat(2,1fr);}
-    .dash-grid{grid-template-columns:1fr;}
-    .station-grid{grid-template-columns:repeat(2,1fr);}
-    .grid-2,.grid-3{grid-template-columns:1fr;}
-  }
-  @media (max-width:760px){
-    .sidebar{position:fixed;inset-inline-start:0;top:0;transform:translateX(105%);}
-    html[dir="ltr"] .sidebar{transform:translateX(-105%);}
-    .sidebar.open{transform:none;}
-    .menu-btn{display:block;}
-    .content{padding:18px 14px 50px;}
-    .topbar{padding:14px 16px;}
-    .status-strip{grid-template-columns:1fr 1fr;}
-    .clock{display:none;}
-  }
+  @keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
 
-<div class="shell">
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <div class="brand-mark">فق</div>
-      <div class="brand-text">
-        <div class="t1" id="brandName">نظام الفقاسة</div>
-        <div class="t2">HATCHERY OS</div>
-      </div>
-    </div>
-    <nav class="nav" id="navList"></nav>
-    <div class="sidebar-foot">
-      <div class="lang-toggle">
-        <button id="btnAr" class="active">العربية</button>
-        <button id="btnEn">English</button>
-      </div>
-    </div>
-  </aside>
-
-  <div class="main">
-    <div class="topbar">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <button class="menu-btn" id="menuBtn">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-        </button>
-        <div>
-          <h1 id="pageTitle">اللوحة الرئيسية</h1>
-          <div class="sub" id="pageSub">نظرة عامة على كل محطات الفقاسة</div>
-        </div>
-      </div>
-      <div class="clock" id="clockBox"></div>
-    </div>
-    <div class="content" id="content"></div>
+<div class="login-card">
+  <div class="brand">
+    <div class="brand-mark">فق</div>
+    <h1>نظام إدارة الفقاسة</h1>
+    <p>سجّل الدخول للمتابعة</p>
   </div>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <form id="loginForm">
+    <div class="field">
+      <label>البريد الإلكتروني</label>
+      <input type="email" id="email" required autocomplete="username" placeholder="example@email.com">
+    </div>
+    <div class="field">
+      <label>كلمة المرور</label>
+      <input type="password" id="password" required autocomplete="current-password" placeholder="••••••••">
+    </div>
+    <button type="submit" class="btn-login" id="loginBtn">دخول</button>
+  </form>
+
+  <div class="foot-note">نظام داخلي — الحسابات تُنشأ يدوياً من مدير النظام</div>
 </div>
 
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modalBody"></div>
-</div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import {
+    getAuth, signInWithEmailAndPassword, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
-<div class="toast-wrap" id="toastWrap"></div>
-
-<script>
-let LANG = 'ar';
-
-const I18N = {
-  ar: {
-    dashTitle:'اللوحة الرئيسية', dashSub:'نظرة عامة على كل محطات الفقاسة',
-    nav_dashboard:'اللوحة الرئيسية', nav_stations:'المحطات', nav_medicines:'الأدوية',
-    nav_nitrogen:'النيتروجين', nav_workers:'العمال', nav_inventory:'المخزون',
-    statActiveBatches:'دفعات نشطة', statAvgHatch:'متوسط نسبة الفقس', statLowStock:'أصناف قاربت على النفاد',
-    statOnLeave:'عمال في إجازة', alertsTitle:'التنبيهات', chartTitle:'نسبة الفقس آخر ٦ دفعات',
-    stationsOverview:'أداء المحطات', addStation:'إضافة دفعة', addMedicine:'إضافة دواء جديد',
-    addWorker:'إضافة عامل', addItem:'إضافة صنف', logUsage:'تسجيل استهلاك', updateNitrogen:'تحديث الرصيد',
-    searchPlaceholder:'ابحث بالاسم أو الكود...',
-    col_station:'المحطة', col_eggs:'عدد البيض', col_chicks:'عدد الكتاكيت', col_hatchRate:'نسبة الفقس',
-    col_fertility:'نسبة الخصوبة', col_startDate:'تاريخ البدء', col_status:'الحالة', col_actions:'إجراءات',
-    col_medName:'اسم الدواء', col_stock:'الرصيد الحالي', col_received:'مستلم', col_used:'مستخدم',
-    col_batchNo:'رقم التشغيلة', col_expiry:'تاريخ الانتهاء',
-    col_workerName:'اسم العامل', col_fileNo:'رقم الملف', col_leaveStart:'بداية الإجازة', col_leaveDays:'مدة الإجازة',
-    col_returnDate:'تاريخ العودة المتوقع', col_actualReturn:'العودة الفعلية', col_daysBack:'أيام منذ العودة',
-    col_itemCode:'الكود', col_itemName:'اسم الصنف', col_category:'الفئة', col_location:'الموقع',
-    col_box:'الصندوق', col_qty:'الكمية المتاحة',
-    nitroFill:'الكمية عند التعبئة', nitroUsedDaily:'الاستهلاك اليومي',
-    nitroDaysLeft:'أيام متبقية تقديرياً',
-    statusGood:'جيد', statusWarn:'تنبيه', statusBad:'حرج',
-    save:'حفظ', cancel:'إلغاء', delete:'حذف', edit:'تعديل',
-    toastSaved:'تم الحفظ بنجاح', toastDeleted:'تم الحذف',
-    emptyTitle:'لا توجد بيانات بعد',
-    nitrogenLevel:'مستوى النيتروجين',
-    formStationName:'اسم المحطة', formEggs:'عدد البيض', formFertility:'نسبة الخصوبة (%)', formChicks:'عدد الكتاكيت الفاقسة',
-    formStart:'تاريخ البدء',
-    formMedName:'اسم الدواء', formStockNow:'الرصيد الحالي', formDosePerUnit:'الجرعة لكل وحدة', formDoseAlert:'حد تنبيه عدد الجرعات',
-    formBatchNo:'رقم التشغيلة', formExpiry:'تاريخ الانتهاء',
-    formWorkerName:'اسم العامل', formFileNo:'رقم الملف', formLeaveStart:'تاريخ بداية الإجازة', formLeaveDays:'عدد أيام الإجازة',
-    formItemCode:'كود الصنف', formItemName:'اسم الصنف', formCategory:'الفئة', formLocation:'الموقع', formBox:'رقم الصندوق', formQty:'الكمية',
-    demoNotice:'بيانات تجريبية محلية — سيتم ربطها بقاعدة بيانات حقيقية لاحقاً',
-  },
-  en: {
-    dashTitle:'Dashboard', dashSub:'Overview across every hatchery station',
-    nav_dashboard:'Dashboard', nav_stations:'Stations', nav_medicines:'Medicines',
-    nav_nitrogen:'Nitrogen', nav_workers:'Workers', nav_inventory:'Inventory',
-    statActiveBatches:'Active Batches', statAvgHatch:'Avg Hatch Rate', statLowStock:'Items Low on Stock',
-    statOnLeave:'Workers on Leave', alertsTitle:'Alerts', chartTitle:'Hatch Rate — Last 6 Batches',
-    stationsOverview:'Station Performance', addStation:'Add Batch', addMedicine:'Add Medicine',
-    addWorker:'Add Worker', addItem:'Add Item', logUsage:'Log Usage', updateNitrogen:'Update Reading',
-    searchPlaceholder:'Search by name or code...',
-    col_station:'Station', col_eggs:'Eggs', col_chicks:'Chicks Hatched', col_hatchRate:'Hatch Rate',
-    col_fertility:'Fertility Rate', col_startDate:'Start Date', col_status:'Status', col_actions:'Actions',
-    col_medName:'Medicine', col_stock:'Current Stock', col_received:'Received', col_used:'Used',
-    col_batchNo:'Batch No.', col_expiry:'Expiry',
-    col_workerName:'Worker', col_fileNo:'File No.', col_leaveStart:'Leave Start', col_leaveDays:'Leave Days',
-    col_returnDate:'Expected Return', col_actualReturn:'Actual Return', col_daysBack:'Days Since Return',
-    col_itemCode:'Code', col_itemName:'Item', col_category:'Category', col_location:'Location',
-    col_box:'Box', col_qty:'Quantity',
-    nitroFill:'Fill Amount', nitroUsedDaily:'Daily Usage',
-    nitroDaysLeft:'Estimated Days Left',
-    statusGood:'Good', statusWarn:'Warning', statusBad:'Critical',
-    save:'Save', cancel:'Cancel', delete:'Delete', edit:'Edit',
-    toastSaved:'Saved successfully', toastDeleted:'Deleted',
-    emptyTitle:'No data yet',
-    nitrogenLevel:'Nitrogen Level',
-    formStationName:'Station Name', formEggs:'Egg Count', formFertility:'Fertility Rate (%)', formChicks:'Chicks Hatched',
-    formStart:'Start Date',
-    formMedName:'Medicine Name', formStockNow:'Current Stock', formDosePerUnit:'Dose per Unit', formDoseAlert:'Dose Count Alert Threshold',
-    formBatchNo:'Batch Number', formExpiry:'Expiry Date',
-    formWorkerName:'Worker Name', formFileNo:'File Number', formLeaveStart:'Leave Start Date', formLeaveDays:'Leave Duration (days)',
-    formItemCode:'Item Code', formItemName:'Item Name', formCategory:'Category', formLocation:'Location', formBox:'Box No.', formQty:'Quantity',
-    demoNotice:'Local demo data — will connect to a real database next',
-  }
-};
-function t(key){ return I18N[LANG][key] || key; }
-
-let DB = {
-  stations: [
-    {id:1, name:'محطة ١', eggs:5400, fertility:92, chicks:4536, start:'2026-08-20'},
-    {id:2, name:'محطة ٢', eggs:5200, fertility:88, chicks:4108, start:'2026-08-22'},
-    {id:3, name:'محطة ٣', eggs:5600, fertility:90, chicks:4816, start:'2026-08-25'},
-    {id:4, name:'محطة ٤', eggs:5100, fertility:85, chicks:3927, start:'2026-08-27'},
-    {id:5, name:'محطة ٥', eggs:5300, fertility:94, chicks:4664, start:'2026-09-01'},
-    {id:6, name:'محطة ٦', eggs:5500, fertility:91, chicks:4510, start:'2026-09-05'},
-  ],
-  medicines: [
-    {id:1, name:'أوكسي تتراسيكلين', stock:340, received:500, used:160, batch:'OTC-2291', expiry:'2027-03-15', dosePerUnit:5, doseAlert:50},
-    {id:2, name:'فيتامين ك٣', stock:38, received:200, used:162, batch:'VTK-1187', expiry:'2026-11-02', dosePerUnit:2, doseAlert:40},
-    {id:3, name:'أمبروليوم', stock:210, received:300, used:90, batch:'AMB-0552', expiry:'2027-06-30', dosePerUnit:10, doseAlert:60},
-  ],
-  nitrogen: {fill:1000, dailyUsage:18.5, lastFillDate:'2026-09-01'},
-  workers: [
-    {id:1, name:'أحمد سيد', fileNo:'W-014', leaveStart:'2026-09-05', leaveDays:14, actualReturn:null},
-    {id:2, name:'محمود جابر', fileNo:'W-027', leaveStart:'2026-08-28', leaveDays:7, actualReturn:'2026-09-06'},
-    {id:3, name:'سامي عادل', fileNo:'W-009', leaveStart:'2026-09-10', leaveDays:5, actualReturn:null},
-  ],
-  inventory: [
-    {id:1, code:'INV-101', name:'صواني تفريخ بلاستيك', category:'معدات', location:'مخزن ١', box:'A3', qty:420, log:[]},
-    {id:2, code:'INV-102', name:'قفازات لاتكس', category:'مستلزمات', location:'مخزن ٢', box:'B1', qty:56, log:[]},
-    {id:3, code:'INV-103', name:'أكياس تعبئة كتاكيت', category:'تعبئة', location:'مخزن ١', box:'A7', qty:1250, log:[]},
-    {id:4, code:'INV-104', name:'مطهر أسطح', category:'تعقيم', location:'مخزن ٣', box:'C2', qty:14, log:[]},
-  ],
-};
-let idCounter = 100;
-
-function toast(msg){
-  const wrap = document.getElementById('toastWrap');
-  const el = document.createElement('div');
-  el.className='toast';
-  el.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg><span>${msg}</span>`;
-  wrap.appendChild(el);
-  setTimeout(()=>{el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),300);}, 2200);
-}
-function daysBetween(a,b){ return Math.round((new Date(b)-new Date(a))/86400000); }
-function fmtDate(d){
-  if(!d) return '—';
-  const dt = new Date(d);
-  return dt.toLocaleDateString(LANG==='ar'?'ar-EG':'en-GB',{day:'numeric',month:'short',year:'numeric'});
-}
-function hatchRate(s){ return Math.round((s.chicks/s.eggs)*100); }
-function openModal(html){
-  document.getElementById('modalBody').innerHTML = html;
-  document.getElementById('modalOverlay').classList.add('open');
-}
-function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
-document.getElementById('modalOverlay').addEventListener('click', e=>{ if(e.target.id==='modalOverlay') closeModal(); });
-
-const NAV = [
-  {id:'dashboard', icon:`<path d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/>`},
-  {id:'stations', icon:`<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>`},
-  {id:'medicines', icon:`<path d="M10.5 3.5l10 10a4.95 4.95 0 01-7 7l-10-10a4.95 4.95 0 017-7z"/><path d="M8.5 8.5l7 7"/>`},
-  {id:'nitrogen', icon:`<path d="M12 2v6M8 6h8l3 6v6a2 2 0 01-2 2H7a2 2 0 01-2-2v-6l3-6z"/>`},
-  {id:'workers', icon:`<circle cx="12" cy="8" r="3.2"/><path d="M5 21v-1.5A5.5 5.5 0 0110.5 14h3A5.5 5.5 0 0119 19.5V21"/>`},
-  {id:'inventory', icon:`<path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/>`},
-];
-
-function renderNav(){
-  const activeId = window.__view || 'dashboard';
-  document.getElementById('navList').innerHTML = NAV.map(n=>{
-    const badge = n.id==='medicines' && lowStockMeds().length ? `<span class="nav-badge">${lowStockMeds().length}</span>` : '';
-    return `<button class="nav-item ${n.id===activeId?'active':''}" data-view="${n.id}">
-      <svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${n.icon}</svg>
-      <span>${t('nav_'+n.id)}</span>${badge}
-    </button>`;
-  }).join('');
-  document.querySelectorAll('.nav-item').forEach(b=>b.addEventListener('click',()=>{
-    setView(b.dataset.view);
-    document.getElementById('sidebar').classList.remove('open');
-  }));
-}
-
-function lowStockMeds(){ return DB.medicines.filter(m => (m.stock/m.dosePerUnit) <= m.doseAlert); }
-function nitrogenRemaining(){
-  const daysSinceFill = daysBetween(DB.nitrogen.lastFillDate, new Date());
-  return Math.max(0, DB.nitrogen.fill - daysSinceFill*DB.nitrogen.dailyUsage);
-}
-function nitrogenDaysLeft(){ return Math.floor(nitrogenRemaining()/DB.nitrogen.dailyUsage); }
-function lowInventory(){ return DB.inventory.filter(i=>i.qty <= 30); }
-function workersBack(){
-  return DB.workers.map(w=>{
-    const expectedReturn = new Date(new Date(w.leaveStart).getTime() + w.leaveDays*86400000);
-    const daysBack = w.actualReturn ? daysBetween(w.actualReturn, new Date()) : null;
-    return {...w, expectedReturn, daysBack};
-  });
-}
-function activeWorkersOnLeave(){
-  const now = new Date();
-  return workersBack().filter(w => !w.actualReturn && w.expectedReturn >= now);
-}
-
-function setView(id){
-  window.__view = id;
-  document.getElementById('pageTitle').textContent = t('nav_'+id) || t('dashTitle');
-  document.getElementById('pageSub').textContent = id==='dashboard' ? t('dashSub') : '';
-  renderNav();
-  const c = document.getElementById('content');
-  c.innerHTML = '';
-  if(id==='dashboard') renderDashboard(c);
-  if(id==='stations') renderStations(c);
-  if(id==='medicines') renderMedicines(c);
-  if(id==='nitrogen') renderNitrogen(c);
-  if(id==='workers') renderWorkers(c);
-  if(id==='inventory') renderInventory(c);
-}
-
-function renderDashboard(c){
-  const avgHatch = Math.round(DB.stations.reduce((a,s)=>a+hatchRate(s),0)/DB.stations.length);
-  const alerts = [];
-  lowStockMeds().forEach(m=> alerts.push({level:'red', title: (LANG==='ar'?`مخزون ${m.name} منخفض`:`Low stock: ${m.name}`), sub:(LANG==='ar'?`${Math.floor(m.stock/m.dosePerUnit)} جرعة متبقية`:`${Math.floor(m.stock/m.dosePerUnit)} doses left`)}));
-  if(nitrogenDaysLeft() <= 7) alerts.push({level:'red', title:(LANG==='ar'?'رصيد النيتروجين حرج':'Nitrogen critically low'), sub:(LANG==='ar'?`${nitrogenDaysLeft()} أيام متبقية`:`${nitrogenDaysLeft()} days left`)});
-  lowInventory().forEach(i=> alerts.push({level:'amber', title:(LANG==='ar'?`مخزون ${i.name} منخفض`:`Low stock: ${i.name}`), sub:(LANG==='ar'?`${i.qty} وحدة متبقية`:`${i.qty} units left`)}));
-
-  c.innerHTML = `
-    <div class="status-strip">
-      <div class="stat amber"><div class="bar"></div><div class="num">${DB.stations.length}</div><div class="lbl">${t('statActiveBatches')}</div></div>
-      <div class="stat teal"><div class="bar"></div><div class="num">${avgHatch}%</div><div class="lbl">${t('statAvgHatch')}</div></div>
-      <div class="stat ${lowStockMeds().length||lowInventory().length?'red':'green'}"><div class="bar"></div><div class="num">${lowStockMeds().length+lowInventory().length}</div><div class="lbl">${t('statLowStock')}</div></div>
-      <div class="stat green"><div class="bar"></div><div class="num">${activeWorkersOnLeave().length}</div><div class="lbl">${t('statOnLeave')}</div></div>
-    </div>
-    <div class="dash-grid">
-      <div class="card">
-        <div class="panel-title">${t('chartTitle')}</div>
-        <div class="chart-wrap"><canvas id="hatchChart"></canvas></div>
-        <div class="panel-title" style="margin-top:22px;">${t('stationsOverview')}</div>
-        <div class="station-grid">
-          ${DB.stations.map(s=>`
-            <div class="station-mini">
-              <div class="nm">${s.name}</div>
-              <div class="rate">${hatchRate(s)}%<span> ${t('col_hatchRate')}</span></div>
-              <div class="meter"><i style="width:${hatchRate(s)}%; background:${hatchRate(s)>=88?'var(--green)':hatchRate(s)>=80?'var(--amber)':'var(--red)'}"></i></div>
-            </div>`).join('')}
-        </div>
-      </div>
-      <div class="card">
-        <div class="panel-title">${t('alertsTitle')} <span style="font-family:var(--font-num);font-size:12px;color:#8A9089;">${alerts.length}</span></div>
-        ${alerts.length ? alerts.map(a=>`
-          <div class="alert-row">
-            <span class="dot ${a.level}"></span>
-            <div class="txt"><strong>${a.title}</strong><span>${a.sub}</span></div>
-          </div>`).join('') : `<div class="empty" style="padding:30px 10px;"><div class="t">${t('emptyTitle')}</div><div class="s">${LANG==='ar'?'لا توجد تنبيهات حالياً':'No active alerts'}</div></div>`}
-      </div>
-    </div>
-  `;
-  drawHatchChart();
-}
-
-function drawHatchChart(){
-  const canvas = document.getElementById('hatchChart');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const parent = canvas.parentElement;
-  canvas.width = parent.clientWidth * 2; canvas.height = parent.clientHeight * 2;
-  canvas.style.width = parent.clientWidth+'px'; canvas.style.height=parent.clientHeight+'px';
-  ctx.scale(2,2);
-  const w = parent.clientWidth, h = parent.clientHeight;
-  const data = DB.stations.map(hatchRate);
-  const max = 100, pad = 28;
-  ctx.clearRect(0,0,w,h);
-  ctx.strokeStyle = '#E7E0D3'; ctx.lineWidth = 1;
-  [0,25,50,75,100].forEach(v=>{
-    const y = h - pad - (v/max)*(h-pad*1.4);
-    ctx.beginPath(); ctx.moveTo(pad*0.3,y); ctx.lineTo(w-6,y); ctx.stroke();
-    ctx.fillStyle = '#A6ABA3'; ctx.font='10px Space Grotesk'; ctx.textAlign='left';
-    ctx.fillText(v+'%', 2, y-3);
-  });
-  const stepX = (w-pad*1.3)/(data.length-1);
-  ctx.beginPath();
-  data.forEach((v,i)=>{
-    const x = pad*0.3 + i*stepX + 10;
-    const y = h - pad - (v/max)*(h-pad*1.4);
-    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-  });
-  ctx.strokeStyle = '#C98A3B'; ctx.lineWidth = 2.5; ctx.lineJoin='round'; ctx.stroke();
-  data.forEach((v,i)=>{
-    const x = pad*0.3 + i*stepX + 10;
-    const y = h - pad - (v/max)*(h-pad*1.4);
-    ctx.beginPath(); ctx.arc(x,y,3.5,0,7); ctx.fillStyle='#C98A3B'; ctx.fill();
-    ctx.fillStyle='#5E655E'; ctx.font='10px Cairo'; ctx.textAlign='center';
-    ctx.fillText(DB.stations[i].name, x, h-6);
-  });
-}
-
-function renderStations(c){
-  c.innerHTML = `
-    <div class="card">
-      <div class="section-head">
-        <div><h2>${t('nav_stations')}</h2><div class="desc">${LANG==='ar'?'نسبة الفقس تُحسب تلقائياً، ونسبة الخصوبة تُدخل يدوياً':'Hatch rate auto-calculated, fertility entered manually'}</div></div>
-        <button class="btn" onclick="openStationForm()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>${t('addStation')}
-        </button>
-      </div>
-      <div class="table-wrap"><table>
-        <thead><tr>
-          <th>${t('col_station')}</th><th>${t('col_eggs')}</th><th>${t('col_chicks')}</th>
-          <th>${t('col_hatchRate')}</th><th>${t('col_fertility')}</th><th>${t('col_startDate')}</th><th>${t('col_actions')}</th>
-        </tr></thead>
-        <tbody>
-        ${DB.stations.map(s=>`
-          <tr>
-            <td style="font-weight:700;">${s.name}</td>
-            <td class="num-cell">${s.eggs.toLocaleString()}</td>
-            <td class="num-cell">${s.chicks.toLocaleString()}</td>
-            <td class="num-cell">${hatchRate(s)}%</td>
-            <td class="num-cell">${s.fertility}%</td>
-            <td>${fmtDate(s.start)}</td>
-            <td class="row-actions">
-              <button class="icon-btn" onclick="openStationForm(${s.id})" title="${t('edit')}">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>
-              </button>
-              <button class="icon-btn" onclick="deleteRow('stations',${s.id})" title="${t('delete')}">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2m2 0v14a1 1 0 01-1 1H7a1 1 0 01-1-1V6"/></svg>
-              </button>
-            </td>
-          </tr>`).join('')}
-        </tbody>
-      </table></div>
-    </div>`;
-}
-function openStationForm(id){
-  const s = id ? DB.stations.find(x=>x.id===id) : {name:'',eggs:'',fertility:'',chicks:'',start:''};
-  openModal(`
-    <h3>${id?t('edit'):t('addStation')}</h3>
-    <div class="field"><label>${t('formStationName')}</label><input id="f_name" value="${s.name}"></div>
-    <div class="field-row">
-      <div class="field"><label>${t('formEggs')}</label><input id="f_eggs" type="number" value="${s.eggs}"></div>
-      <div class="field"><label>${t('formFertility')}</label><input id="f_fertility" type="number" value="${s.fertility}"></div>
-    </div>
-    <div class="field-row">
-      <div class="field"><label>${t('formChicks')}</label><input id="f_chicks" type="number" value="${s.chicks}"></div>
-      <div class="field"><label>${t('formStart')}</label><input id="f_start" type="date" value="${s.start}"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn ghost" onclick="closeModal()">${t('cancel')}</button>
-      <button class="btn" onclick="saveStation(${id||'null'})">${t('save')}</button>
-    </div>
-  `);
-}
-function saveStation(id){
-  const vals = {
-    name: document.getElementById('f_name').value.trim(),
-    eggs: +document.getElementById('f_eggs').value || 0,
-    fertility: +document.getElementById('f_fertility').value || 0,
-    chicks: +document.getElementById('f_chicks').value || 0,
-    start: document.getElementById('f_start').value,
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3CJbQG70wGK2UdBImPYUOgeMMGFst0cg",
+    authDomain: "naif-hatchery.firebaseapp.com",
+    projectId: "naif-hatchery",
+    storageBucket: "naif-hatchery.firebasestorage.app",
+    messagingSenderId: "357172497976",
+    appId: "1:357172497976:web:ec15d713477e980a10a0cd"
   };
-  if(!vals.name){ toast(LANG==='ar'?'اسم المحطة مطلوب':'Station name is required'); return; }
-  if(id){ Object.assign(DB.stations.find(x=>x.id===id), vals); }
-  else { DB.stations.push({id:++idCounter, ...vals}); }
-  closeModal(); toast(t('toastSaved')); setView('stations');
-}
 
-function renderMedicines(c){
-  c.innerHTML = `
-    <div class="card">
-      <div class="section-head">
-        <div><h2>${t('nav_medicines')}</h2><div class="desc">${LANG==='ar'?'يُنشأ لكل دواء سجل مستقل لمتابعة الرصيد والجرعات':'Each medicine tracked independently by stock and dose count'}</div></div>
-        <button class="btn" onclick="openMedForm()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>${t('addMedicine')}
-        </button>
-      </div>
-      <div class="table-wrap"><table>
-        <thead><tr>
-          <th>${t('col_medName')}</th><th>${t('col_stock')}</th><th>${t('col_received')}</th><th>${t('col_used')}</th>
-          <th>${t('col_batchNo')}</th><th>${t('col_expiry')}</th><th>${t('col_status')}</th><th>${t('col_actions')}</th>
-        </tr></thead>
-        <tbody>
-        ${DB.medicines.map(m=>{
-          const dosesLeft = Math.floor(m.stock/m.dosePerUnit);
-          const low = dosesLeft <= m.doseAlert;
-          const expSoon = daysBetween(new Date(), m.expiry) <= 60;
-          const status = low ? `<span class="pill bad">${t('statusBad')}</span>` : expSoon ? `<span class="pill warn">${t('statusWarn')}</span>` : `<span class="pill ok">${t('statusGood')}</span>`;
-          return `<tr>
-            <td style="font-weight:700;">${m.name}</td>
-            <td class="num-cell">${m.stock}</td>
-            <td class="num-cell">${m.received}</td>
-            <td class="num-cell">${m.used}</td>
-            <td class="num-cell">${m.batch}</td>
-            <td>${fmtDate(m.expiry)}</td>
-            <td>${status}</td>
-            <td class="row-actions">
-              <button class="icon-btn" onclick="openMedForm(${m.id})" title="${t('edit')}">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>
-              </button>
-              <button class="icon-btn" onclick="deleteRow('medicines',${m.id})" title="${t('delete')}">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2m2 0v14a1 1 0 01-1 1H7a1 1 0 01-1-1V6"/></svg>
-              </button>
-            </td>
-          </tr>`;
-        }).join('')}
-        </tbody>
-      </table></div>
-    </div>`;
-}
-function openMedForm(id){
-  const m = id ? DB.medicines.find(x=>x.id===id) : {name:'',stock:'',received:'',used:'',batch:'',expiry:'',dosePerUnit:'',doseAlert:''};
-  openModal(`
-    <h3>${id?t('edit'):t('addMedicine')}</h3>
-    <div class="field"><label>${t('formMedName')}</label><input id="f_name" value="${m.name}"></div>
-    <div class="field-row">
-      <div class="field"><label>${t('formStockNow')}</label><input id="f_stock" type="number" value="${m.stock}"></div>
-      <div class="field"><label>${t('col_received')}</label><input id="f_received" type="number" value="${m.received}"></div>
-    </div>
-    <div class="field-row">
-      <div class="field"><label>${t('col_used')}</label><input id="f_used" type="number" value="${m.used}"></div>
-      <div class="field"><label>${t('formBatchNo')}</label><input id="f_batch" value="${m.batch}"></div>
-    </div>
-    <div class="field-row">
-      <div class="field"><label>${t('formDosePerUnit')}</label><input id="f_dose" type="number" value="${m.dosePerUnit}"></div>
-      <div class="field"><label>${t('formDoseAlert')}</label><input id="f_alert" type="number" value="${m.doseAlert}"></div>
-    </div>
-    <div class="field"><label>${t('formExpiry')}</label><input id="f_expiry" type="date" value="${m.expiry}"></div>
-    <div class="modal-actions">
-      <button class="btn ghost" onclick="closeModal()">${t('cancel')}</button>
-      <button class="btn" onclick="saveMed(${id||'null'})">${t('save')}</button>
-    </div>
-  `);
-}
-function saveMed(id){
-  const vals = {
-    name: document.getElementById('f_name').value.trim(),
-    stock: +document.getElementById('f_stock').value || 0,
-    received: +document.getElementById('f_received').value || 0,
-    used: +document.getElementById('f_used').value || 0,
-    batch: document.getElementById('f_batch').value,
-    dosePerUnit: +document.getElementById('f_dose').value || 1,
-    doseAlert: +document.getElementById('f_alert').value || 0,
-    expiry: document.getElementById('f_expiry').value,
-  };
-  if(!vals.name){ toast(LANG==='ar'?'اسم الدواء مطلوب':'Medicine name is required'); return; }
-  if(id){ Object.assign(DB.medicines.find(x=>x.id===id), vals); }
-  else { DB.medicines.push({id:++idCounter, ...vals}); }
-  closeModal(); toast(t('toastSaved')); setView('medicines');
-}
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-function renderNitrogen(c){
-  const remaining = nitrogenRemaining();
-  const daysLeft = nitrogenDaysLeft();
-  const pct = Math.max(0,Math.min(100, Math.round((remaining/DB.nitrogen.fill)*100)));
-  const critical = daysLeft <= 7;
-  c.innerHTML = `
-    <div class="grid-2">
-      <div class="card">
-        <div class="section-head"><div><h2>${t('nitrogenLevel')}</h2></div>
-          <button class="btn" onclick="openNitrogenForm()">${t('updateNitrogen')}</button>
-        </div>
-        <div style="display:flex;align-items:center;gap:22px;">
-          <div style="font-family:var(--font-num);font-size:44px;font-weight:700;color:${critical?'var(--red)':'var(--teal)'};">${Math.round(remaining)}<span style="font-size:16px;color:#8A9089;"> L</span></div>
-          <div style="flex:1;">
-            <div class="meter" style="height:9px;"><i style="width:${pct}%; background:${critical?'var(--red)':'var(--green)'}"></i></div>
-            <div style="font-size:12px;color:#8A9089;margin-top:6px;">${pct}% ${LANG==='ar'?'من السعة الكلية':'of full capacity'}</div>
-          </div>
-        </div>
-        <div class="grid-3" style="margin-top:20px;">
-          <div class="station-mini" style="background:var(--paper-dim);border-color:var(--line-light);">
-            <div class="nm" style="color:#5E655E;">${t('nitroFill')}</div>
-            <div class="rate" style="color:var(--ink);">${DB.nitrogen.fill} L</div>
-          </div>
-          <div class="station-mini" style="background:var(--paper-dim);border-color:var(--line-light);">
-            <div class="nm" style="color:#5E655E;">${t('nitroUsedDaily')}</div>
-            <div class="rate" style="color:var(--ink);">${DB.nitrogen.dailyUsage} L</div>
-          </div>
-          <div class="station-mini" style="background:${critical?'var(--red-soft)':'var(--paper-dim)'};border-color:var(--line-light);">
-            <div class="nm" style="color:#5E655E;">${t('nitroDaysLeft')}</div>
-            <div class="rate" style="color:${critical?'var(--red)':'var(--ink)'};">${daysLeft} ${LANG==='ar'?'يوم':'days'}</div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="panel-title">${t('alertsTitle')}</div>
-        ${critical ? `
-        <div class="alert-row"><span class="dot red"></span><div class="txt"><strong>${LANG==='ar'?'رصيد النيتروجين منخفض جداً':'Nitrogen stock critically low'}</strong><span>${LANG==='ar'?`متبقٍ ${daysLeft} يوم فقط`:`Only ${daysLeft} days remaining`}</span></div></div>
-        ` : `<div class="empty" style="padding:24px 10px;"><div class="t">${LANG==='ar'?'الرصيد ضمن المعدل الطبيعي':'Stock is at a healthy level'}</div></div>`}
-      </div>
-    </div>`;
-}
-function openNitrogenForm(){
-  openModal(`
-    <h3>${t('updateNitrogen')}</h3>
-    <div class="field"><label>${t('nitroFill')} (L)</label><input id="f_fill" type="number" value="${DB.nitrogen.fill}"></div>
-    <div class="field"><label>${t('nitroUsedDaily')} (L)</label><input id="f_daily" type="number" step="0.1" value="${DB.nitrogen.dailyUsage}"></div>
-    <div class="modal-actions">
-      <button class="btn ghost" onclick="closeModal()">${t('cancel')}</button>
-      <button class="btn" onclick="saveNitrogen()">${t('save')}</button>
-    </div>
-  `);
-}
-function saveNitrogen(){
-  DB.nitrogen.fill = +document.getElementById('f_fill').value || 0;
-  DB.nitrogen.dailyUsage = +document.getElementById('f_daily').value || 0.1;
-  DB.nitrogen.lastFillDate = new Date().toISOString().slice(0,10);
-  closeModal(); toast(t('toastSaved')); setView('nitrogen');
-}
-
-function renderWorkers(c){
-  const list = workersBack();
-  c.innerHTML = `
-    <div class="card">
-      <div class="section-head">
-        <div><h2>${t('nav_workers')}</h2></div>
-        <button class="btn" onclick="openWorkerForm()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>${t('addWorker')}
-        </button>
-      </div>
-      <div class="table-wrap"><table>
-        <thead><tr>
-          <th>${t('col_workerName')}</th><th>${t('col_fileNo')}</th><th>${t('col_leaveStart')}</th><th>${t('col_leaveDays')}</th>
-          <th>${t('col_returnDate')}</th><th>${t('col_actualReturn')}</th><th>${t('col_daysBack')}</th><th>${t('col_actions')}</th>
-        </tr></thead>
-        <tbody>
-        ${list.map(w=>`
-          <tr>
-            <td style="font-weight:700;">${w.name}</td>
-            <td class="num-cell">${w.fileNo}</td>
-            <td>${fmtDate(w.leaveStart)}</td>
-            <td class="num-cell">${w.leaveDays}</td>
-            <td>${fmtDate(w.expectedReturn)}</td>
-            <td>${w.actualReturn?fmtDate(w.actualReturn):'—'}</td>
-            <td class="num-cell">${w.daysBack!==null?w.daysBack:'—'}</td>
-            <td class="row-actions">
-              <button class="icon-btn" onclick="openWorkerForm(${w.id})" title="${t('edit')}">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>
-              </button>
-              <button class="icon-btn" onclick="deleteRow('workers',${w.id})" title="${t('delete')}">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2m2 0v14a1 1 0 01-1 1H7a1 1 0 01-1-1V6"/></svg>
-              </button>
-            </td>
-          </tr>`).join('')}
-        </tbody>
-      </table></div>
-    </div>`;
-}
-function openWorkerForm(id){
-  const w = id ? DB.workers.find(x=>x.id===id) : {name:'',fileNo:'',leaveStart:'',leaveDays:'',actualReturn:''};
-  openModal(`
-    <h3>${id?t('edit'):t('addWorker')}</h3>
-    <div class="field"><label>${t('formWorkerName')}</label><input id="f_name" value="${w.name}"></div>
-    <div class="field-row">
-      <div class="field"><label>${t('formFileNo')}</label><input id="f_file" value="${w.fileNo}"></div>
-      <div class="field"><label>${t('formLeaveDays')}</label><input id="f_days" type="number" value="${w.leaveDays}"></div>
-    </div>
-    <div class="field-row">
-      <div class="field"><label>${t('formLeaveStart')}</label><input id="f_leaveStart" type="date" value="${w.leaveStart}"></div>
-      <div class="field"><label>${t('col_actualReturn')}</label><input id="f_actual" type="date" value="${w.actualReturn||''}"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn ghost" onclick="closeModal()">${t('cancel')}</button>
-      <button class="btn" onclick="saveWorker(${id||'null'})">${t('save')}</button>
-    </div>
-  `);
-}
-function saveWorker(id){
-  const vals = {
-    name: document.getElementById('f_name').value.trim(),
-    fileNo: document.getElementById('f_file').value,
-    leaveDays: +document.getElementById('f_days').value || 0,
-    leaveStart: document.getElementById('f_leaveStart').value,
-    actualReturn: document.getElementById('f_actual').value || null,
-  };
-  if(!vals.name){ toast(LANG==='ar'?'اسم العامل مطلوب':'Worker name is required'); return; }
-  if(id){ Object.assign(DB.workers.find(x=>x.id===id), vals); }
-  else { DB.workers.push({id:++idCounter, ...vals}); }
-  closeModal(); toast(t('toastSaved')); setView('workers');
-}
-
-function renderInventory(c, searchQ=''){
-  const q = searchQ.toLowerCase();
-  const items = DB.inventory.filter(i=> !q || i.name.toLowerCase().includes(q) || i.code.toLowerCase().includes(q));
-  c.innerHTML = `
-    <div class="card">
-      <div class="section-head">
-        <div><h2>${t('nav_inventory')}</h2></div>
-        <button class="btn" onclick="openItemForm()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>${t('addItem')}
-        </button>
-      </div>
-      <div class="search-bar">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
-        <input id="invSearch" placeholder="${t('searchPlaceholder')}" value="${searchQ}">
-      </div>
-      <div class="table-wrap"><table>
-        <thead><tr>
-          <th>${t('col_itemCode')}</th><th>${t('col_itemName')}</th><th>${t('col_category')}</th>
-          <th>${t('col_location')}</th><th>${t('col_box')}</th><th>${t('col_qty')}</th><th>${t('col_actions')}</th>
-        </tr></thead>
-        <tbody>
-        ${items.length ? items.map(i=>`
-          <tr>
-            <td class="num-cell">${i.code}</td>
-            <td style="font-weight:700;">${i.name}</td>
-            <td>${i.category}</td>
-            <td>${i.location}</td>
-            <td class="num-cell">${i.box}</td>
-            <td class="num-cell">${i.qty}${i.qty<=30?` <span class="pill bad" style="margin-inline-start:6px;">${t('statusWarn')}</span>`:''}</td>
-            <td class="row-actions">
-              <button class="icon-btn" onclick="openIssueForm(${i.id})" title="${t('logUsage')}">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-              </button>
-              <button class="icon-btn" onclick="openItemForm(${i.id})" title="${t('edit')}">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>
-              </button>
-              <button class="icon-btn" onclick="deleteRow('inventory',${i.id})" title="${t('delete')}">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2m2 0v14a1 1 0 01-1 1H7a1 1 0 01-1-1V6"/></svg>
-              </button>
-            </td>
-          </tr>`).join('') : `<tr><td colspan="7"><div class="empty"><div class="t">${t('emptyTitle')}</div></div></td></tr>`}
-        </tbody>
-      </table></div>
-    </div>`;
-  document.getElementById('invSearch').addEventListener('input', e=>renderInventory(c, e.target.value));
-  document.getElementById('invSearch').focus();
-  document.getElementById('invSearch').setSelectionRange(searchQ.length, searchQ.length);
-}
-function openItemForm(id){
-  const i = id ? DB.inventory.find(x=>x.id===id) : {code:'',name:'',category:'',location:'',box:'',qty:''};
-  openModal(`
-    <h3>${id?t('edit'):t('addItem')}</h3>
-    <div class="field-row">
-      <div class="field"><label>${t('formItemCode')}</label><input id="f_code" value="${i.code}"></div>
-      <div class="field"><label>${t('formItemName')}</label><input id="f_name" value="${i.name}"></div>
-    </div>
-    <div class="field-row">
-      <div class="field"><label>${t('formCategory')}</label><input id="f_cat" value="${i.category}"></div>
-      <div class="field"><label>${t('formLocation')}</label><input id="f_loc" value="${i.location}"></div>
-    </div>
-    <div class="field-row">
-      <div class="field"><label>${t('formBox')}</label><input id="f_box" value="${i.box}"></div>
-      <div class="field"><label>${t('formQty')}</label><input id="f_qty" type="number" value="${i.qty}"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn ghost" onclick="closeModal()">${t('cancel')}</button>
-      <button class="btn" onclick="saveItem(${id||'null'})">${t('save')}</button>
-    </div>
-  `);
-}
-function saveItem(id){
-  const vals = {
-    code: document.getElementById('f_code').value,
-    name: document.getElementById('f_name').value.trim(),
-    category: document.getElementById('f_cat').value,
-    location: document.getElementById('f_loc').value,
-    box: document.getElementById('f_box').value,
-    qty: +document.getElementById('f_qty').value || 0,
-  };
-  if(!vals.name){ toast(LANG==='ar'?'اسم الصنف مطلوب':'Item name is required'); return; }
-  if(id){ Object.assign(DB.inventory.find(x=>x.id===id), vals); }
-  else { DB.inventory.push({id:++idCounter, ...vals, log:[]}); }
-  closeModal(); toast(t('toastSaved')); setView('inventory');
-}
-function openIssueForm(id){
-  const i = DB.inventory.find(x=>x.id===id);
-  openModal(`
-    <h3>${t('logUsage')} — ${i.name}</h3>
-    <div class="field"><label>${LANG==='ar'?'الكمية المصروفة':'Quantity issued'}</label><input id="f_issue" type="number" min="1" max="${i.qty}"></div>
-    <div style="font-size:12px;color:#8A9089;margin-top:-6px;">${LANG==='ar'?`المتاح حالياً: ${i.qty}`:`Available: ${i.qty}`}</div>
-    <div class="modal-actions">
-      <button class="btn ghost" onclick="closeModal()">${t('cancel')}</button>
-      <button class="btn" onclick="saveIssue(${id})">${t('save')}</button>
-    </div>
-  `);
-}
-function saveIssue(id){
-  const amt = +document.getElementById('f_issue').value || 0;
-  const i = DB.inventory.find(x=>x.id===id);
-  if(amt<=0 || amt>i.qty){ toast(LANG==='ar'?'كمية غير صحيحة':'Invalid quantity'); return; }
-  i.qty -= amt;
-  i.log.push({date:new Date().toISOString().slice(0,10), amt});
-  closeModal(); toast(t('toastSaved')); setView('inventory');
-}
-
-function deleteRow(coll, id){
-  DB[coll] = DB[coll].filter(x=>x.id!==id);
-  toast(t('toastDeleted'));
-  setView(window.__view);
-}
-
-function setLang(lang){
-  LANG = lang;
-  document.documentElement.lang = lang;
-  document.documentElement.dir = lang==='ar' ? 'rtl' : 'ltr';
-  document.body.classList.toggle('lang-en', lang==='en');
-  document.getElementById('btnAr').classList.toggle('active', lang==='ar');
-  document.getElementById('btnEn').classList.toggle('active', lang==='en');
-  document.getElementById('brandName').textContent = lang==='ar' ? 'نظام الفقاسة' : 'Hatchery System';
-  setView(window.__view || 'dashboard');
-}
-document.getElementById('btnAr').addEventListener('click',()=>setLang('ar'));
-document.getElementById('btnEn').addEventListener('click',()=>setLang('en'));
-
-document.getElementById('menuBtn').addEventListener('click',()=>{
-  document.getElementById('sidebar').classList.toggle('open');
-});
-function tickClock(){
-  const now = new Date();
-  document.getElementById('clockBox').innerHTML = now.toLocaleDateString(LANG==='ar'?'ar-EG':'en-GB',{weekday:'long',day:'numeric',month:'short'}) +
-    '<br>' + now.toLocaleTimeString(LANG==='ar'?'ar-EG':'en-GB',{hour:'2-digit',minute:'2-digit'});
-}
-setInterval(tickClock, 1000*30);
-
-setLang('ar');
-setView('dashboard');
-tickClock();
-toast(t('demoNotice'));
-window.addEventListener('resize', ()=>{ if(window.__view==='dashboard') drawHatchChart(); });
-
-if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  // If already logged in, go straight to the app
+  onAuthStateChanged(auth, (user) => {
+    if (user) window.location.href = './app.html';
   });
-}
+
+  const form = document.getElementById('loginForm');
+  const errorBox = document.getElementById('errorBox');
+  const loginBtn = document.getElementById('loginBtn');
+
+  const ERROR_MESSAGES = {
+    'auth/invalid-email': 'البريد الإلكتروني غير صحيح',
+    'auth/user-disabled': 'هذا الحساب معطّل',
+    'auth/user-not-found': 'لا يوجد حساب بهذا البريد',
+    'auth/wrong-password': 'كلمة المرور غير صحيحة',
+    'auth/invalid-credential': 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
+    'auth/too-many-requests': 'محاولات كثيرة، حاول لاحقاً',
+    'auth/network-request-failed': 'تحقق من اتصال الإنترنت',
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.classList.remove('show');
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    loginBtn.disabled = true;
+    loginBtn.innerHTML = '<span class="spinner"></span> جاري الدخول...';
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      window.location.href = './app.html';
+    } catch (err) {
+      const msg = ERROR_MESSAGES[err.code] || 'حدث خطأ، حاول مرة أخرى';
+      errorBox.textContent = msg;
+      errorBox.classList.add('show');
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'دخول';
+    }
+  });
 </script>
 </body>
 </html>
